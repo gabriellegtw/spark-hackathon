@@ -13,7 +13,7 @@ export function AuthPage({ onSelectRole }: AuthPageProps) {
             <Heart className="w-8 h-8 text-teal-DEFAULT fill-teal-DEFAULT/20" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-warmGray-heading mb-4">
-            Welcome to CareConnect
+            Welcome to Clearwater Health
           </h1>
           <p className="text-xl text-warmGray-body max-w-2xl mx-auto">
             We're here to support your journey to better health. Let's get you
@@ -68,7 +68,7 @@ export function AuthPage({ onSelectRole }: AuthPageProps) {
 
         {/* Footer */}
         <div className="mt-16 text-center text-warmGray-light text-sm">
-          <p>© 2024 CareConnect Health. Designed with care.</p>
+          <p>© 2026 Clearwater Health. Designed with care.</p>
         </div>
       </div>
     </div>);

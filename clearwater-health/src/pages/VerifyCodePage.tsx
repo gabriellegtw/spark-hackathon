@@ -95,7 +95,7 @@ export function VerifyCodePage({
 
             <button
               type="submit"
-              className={`w-full py-3.5 rounded-xl font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 ${role === 'patient' ? 'bg-teal-DEFAULT hover:bg-teal-dark shadow-teal-DEFAULT/20' : 'bg-sage-DEFAULT hover:bg-sage-light/80 text-white shadow-sage-DEFAULT/20'}`}>
+              className={`w-full py-3.5 rounded-xl font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 ${role === 'patient' ? 'bg-teal-medium hover:bg-teal-dark shadow-teal-DEFAULT/20' : 'bg-sage-medium hover:bg-sage-light/80 text-white shadow-sage-DEFAULT/20'}`}>
 
               Verify & Sign In
             </button>

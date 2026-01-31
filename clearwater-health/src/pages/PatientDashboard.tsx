@@ -21,10 +21,10 @@ export function PatientDashboard({ onLogout }: PatientDashboardProps) {
       <header className="px-6 py-6 bg-white/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-teal-DEFAULT rounded-full flex items-center justify-center text-white font-bold">
+            <div className="w-10 h-10 bg-teal-medium rounded-full flex items-center justify-center text-white font-bold">
               MP
             </div>
-            <span className="font-bold text-warmGray-heading">CareConnect</span>
+            <span className="font-bold text-warmGray-heading">Clearwater Health</span>
           </div>
           <button
             onClick={onLogout}
@@ -48,7 +48,7 @@ export function PatientDashboard({ onLogout }: PatientDashboardProps) {
 
         {/* Main Appointment Widget */}
         <div className="bg-white rounded-[2rem] shadow-warm overflow-hidden mb-10 border border-cream-border">
-          <div className="bg-teal-DEFAULT/10 p-6 flex items-center gap-3 border-b border-teal-light/20">
+          <div className="bg-teal-medium/10 p-6 flex items-center gap-3 border-b border-teal-light/20">
             <Calendar className="w-5 h-5 text-teal-dark" />
             <span className="font-bold text-teal-dark">Up Next</span>
           </div>
@@ -85,7 +85,7 @@ export function PatientDashboard({ onLogout }: PatientDashboardProps) {
                   Your care team is ready. You can join the waiting room 10
                   minutes early.
                 </p>
-                <button className="w-full py-3 bg-teal-DEFAULT hover:bg-teal-dark text-white rounded-xl font-bold transition-colors shadow-lg shadow-teal-DEFAULT/20">
+                <button className="w-full py-3 bg-teal-medium hover:bg-teal-dark text-white rounded-xl font-bold transition-colors shadow-lg shadow-teal-DEFAULT/20">
                   Join Call
                 </button>
               </div>
