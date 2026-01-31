@@ -134,7 +134,7 @@ export function NurseDashboard({ onLogout }: NurseDashboardProps) {
 
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-teal-DEFAULT flex items-center justify-center text-white font-bold">
+            <div className="w-10 h-10 rounded-full bg-teal-medium flex items-center justify-center text-white font-bold">
               SJ
             </div>
             <div>
@@ -322,7 +322,7 @@ export function NurseDashboard({ onLogout }: NurseDashboardProps) {
                 </button>
                 <button
                 onClick={handleConfirm}
-                className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-colors ${emergencyMode ? 'bg-teal-DEFAULT hover:bg-teal-dark text-white' : 'bg-red-600 hover:bg-red-700 text-white'}`}>
+                className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-colors ${emergencyMode ? 'bg-teal-medium hover:bg-teal-dark text-white' : 'bg-red-600 hover:bg-red-700 text-white'}`}>
 
                   {emergencyMode ? 'Yes, Deactivate' : 'Yes, Activate'}
                 </button>

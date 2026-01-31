@@ -73,7 +73,7 @@ export function RoleSelectPage({
 
         {/* Sign Up Section */}
         <div className="text-center">
-          <p className="text-warmGray-body mb-4">New to CareConnect?</p>
+          <p className="text-warmGray-body mb-4">New to Clearwater Health?</p>
           <button
             onClick={onSignUp}
             className="inline-flex items-center justify-center px-8 py-3 bg-white border-2 border-teal-DEFAULT text-teal-DEFAULT hover:bg-teal-light/10 rounded-xl font-bold transition-colors shadow-sm hover:shadow-md">

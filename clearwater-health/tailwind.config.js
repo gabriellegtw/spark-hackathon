@@ -14,6 +14,7 @@ export default {
         teal: {
           light: '#A3D9D3',
           DEFAULT: '#5EAAA8',
+          medium: '#5EAAA8',
           dark: '#3D8B8B',
         },
         cream: {
@@ -27,6 +28,7 @@ export default {
         },
         sage: {
           DEFAULT: '#81B29A', // Success
+          medium: '#81B29A',
           light: '#D8E5DE',
         },
         warmGray: {
