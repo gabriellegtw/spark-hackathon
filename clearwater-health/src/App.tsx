@@ -6,7 +6,12 @@ import { VerifyCodePage } from './pages/VerifyCodePage';
 import { NurseDashboard } from './pages/NurseDashboard';
 import { PatientDashboard } from './pages/PatientDashboard';
 import { CallNursePage } from './pages/CallNursePage';
-type AuthStep = 'role-select' | 'sign-up' | 'login' | 'verify' | 'dashboard' | 'calling-nurse';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+
+
+
+type AuthStep = 'role-select' | 'sign-up' | 'login' | 'verify' | 'dashboard' | 'calling-nurse' | 'reschedule';
 type UserRole = 'nurse' | 'patient';
 import { signOut, getUserProfile, getCurrentUser } from './lib/auth';
 export function App() {
@@ -16,6 +21,8 @@ export function App() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
+  type CalendarValue = Date | null | Date[];
+  const [date, setDate] = useState<Date | null>(new Date());
   // Navigation handlers
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role);
@@ -58,6 +65,11 @@ export function App() {
       }
     }
     setAuthStep('dashboard');
+  };
+
+  const handleRescheduleClick = () => {
+    console.log('Reschedule clicked');
+    setAuthStep('reschedule');
   };
   const handleLogout = async () => {
     await signOut();
@@ -108,7 +120,11 @@ export function App() {
           lastName={lastName}
           onBack={handleBackToLogin}
           onVerify={handleVerifySuccess} />
+      }
 
+
+      {authStep === 'calling-nurse' &&
+        <CallNursePage onEndCall={handleEndCall} />
       }
 
       {authStep === 'calling-nurse' &&
@@ -124,8 +140,34 @@ export function App() {
           onLogout={handleLogout}
           onCallNurse={handleCallNurse}
           userName={firstName}
-        />
+          onReschedule={handleRescheduleClick} />
       }
-    </div>);
 
+      {authStep === 'reschedule' && (
+        
+        <div className="max-w-3xl mx-auto px-6 pt-8">
+          <button 
+            onClick={() => setAuthStep('dashboard')}
+            className="mb-6 text-teal-DEFAULT font-bold flex items-center gap-2"
+          >
+            ← Back to Dashboard
+          </button>
+          
+          <div className="bg-white rounded-[2rem] p-10 shadow-warm border border-cream-border text-center">
+            <h2 className="text-2xl font-bold text-warmGray-heading mb-4">Select a New Date</h2>
+            <p className="text-warmGray-body mb-8">Calendar integration goes here.</p>
+            
+            <div className="aspect-square max-w-sm mx-auto bg-cream-card rounded-2xl flex items-center justify-center border-2 border-dashed border-cream-border">
+              <div className="calendar-container w-full max-w-md shadow-sm rounded-2xl overflow-hidden border border-cream-border p-4 bg-white">
+                <Calendar 
+                  onChange={(value) => setDate(value as Date)}
+                  value={date}
+                  className="mx-auto border-none font-sans"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>);
 }

@@ -12,9 +12,10 @@ interface PatientDashboardProps {
   onLogout: () => void;
   onCallNurse: () => void;
   userName: string;
+  onReschedule: () => void;
 }
 
-export function PatientDashboard({ onLogout, onCallNurse, userName }: PatientDashboardProps) {
+export function PatientDashboard({ onLogout, onCallNurse, userName, onReschedule }: PatientDashboardProps) {
   // --- Emergency Mode Logic (Merged from main) ---
   const [isEmergency, setIsEmergency] = useState<boolean>(() => {
     const saved = localStorage.getItem('emergencyMode');
@@ -104,7 +105,7 @@ export function PatientDashboard({ onLogout, onCallNurse, userName }: PatientDas
                       <Clock className={`w-4 h-4 ${isEmergency ? 'text-coral' : 'text-teal-DEFAULT'}`} />
                     </div>
                     <span className={`font-medium ${isEmergency ? 'text-coral font-bold' : ''}`}>
-                      {isEmergency ? 'Arriving Now' : '2nd February 2026, 6:00 PM'}
+                      {isEmergency ? 'Arriving Now' : 'Today, 6:00 PM'}
                     </span>
                   </div>
                 </div>
@@ -134,6 +135,13 @@ export function PatientDashboard({ onLogout, onCallNurse, userName }: PatientDas
               </div>
             </div>
 
+          <div className={`rounded-2xl p-6 md:w-64 flex flex-col items-center text-center border transition-colors ${
+            isEmergency ? 'bg-coral/5 border-coral/20' : 'bg-cream-base border-cream-border'
+          }`}>
+            <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors ${
+              isEmergency ? 'bg-coral text-white animate-pulse' : 'bg-teal-light/30 text-teal-dark'
+            }`}>
+              <Video className="w-8 h-8" />
             <div className="pt-6 border-t border-cream-border flex items-center justify-between text-sm text-warmGray-light">
               <span>Appointment ID: {isEmergency ? '#88392' : '#88393'}</span>
               <button className="text-teal-DEFAULT font-bold hover:underline">
@@ -143,9 +151,21 @@ export function PatientDashboard({ onLogout, onCallNurse, userName }: PatientDas
           </div>
         </div>
 
-        {/* Medications (Prominent full-width card) */}
-        <div className="mb-10">
-          <div className="bg-white p-8 rounded-3xl shadow-warm border border-cream-border hover:border-teal-light transition-colors">
+        {/* 4. Footer ID change */}
+        <div className="pt-6 border-t border-cream-border flex items-center justify-between text-sm text-warmGray-light">
+          <span>Appointment ID: {isEmergency ? '#88392' : '#88393'}</span>
+          <button className="text-teal-DEFAULT font-bold hover:underline"
+          onClick={onReschedule}>
+            Reschedule
+          </button>
+        </div>
+      </div>
+      </div>
+      
+        {/* Secondary Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          {/* Medications */}
+          <div className="bg-white p-6 rounded-3xl shadow-warm border border-cream-border hover:border-teal-light transition-colors group">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 bg-sage-light/40 rounded-2xl flex items-center justify-center text-sage-DEFAULT transition-colors">
