@@ -24,3 +24,9 @@ dist-ssr
 *.sw?
 
 /Spark PDFs/
+
+# Supabase Dependencies
+node_modules/
+
+# Environment variables
+.env
