@@ -105,49 +105,41 @@ export function PatientDashboard({ onLogout }: PatientDashboardProps) {
           </div>
         </div>
 
-        {/* Secondary Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-          {/* Medications */}
-          <div className="bg-white p-6 rounded-3xl shadow-warm border border-cream-border hover:border-teal-light transition-colors group">
+        {/* Medications (Prominent full-width card) */}
+        <div className="mb-10">
+          <div className="bg-white p-8 rounded-3xl shadow-warm border border-cream-border hover:border-teal-light transition-colors">
             <div className="flex items-center justify-between mb-6">
-              <div className="w-12 h-12 bg-sage-light/40 rounded-2xl flex items-center justify-center text-sage-DEFAULT group-hover:bg-sage-light/60 transition-colors">
-                <Pill className="w-6 h-6" />
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-sage-light/40 rounded-2xl flex items-center justify-center text-sage-DEFAULT transition-colors">
+                  <Pill className="w-8 h-8" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-warmGray-heading mb-1">Medications</h3>
+                  <p className="text-warmGray-body">Next dose: Metoprolol (50mg) with dinner.</p>
+                </div>
               </div>
-              <span className="text-xs font-bold bg-sage-light/30 text-sage-DEFAULT px-3 py-1 rounded-full">
-                On Track
-              </span>
+              <span className="text-sm font-bold bg-sage-light/30 text-sage-DEFAULT px-3 py-1 rounded-full">On Track</span>
             </div>
-            <h3 className="text-xl font-bold text-warmGray-heading mb-2">
-              Medications
-            </h3>
-            <p className="text-warmGray-body text-sm mb-4">
-              Next dose: Metoprolol (50mg) with dinner.
-            </p>
-            <button className="text-teal-DEFAULT font-bold text-sm flex items-center gap-1 hover:gap-2 transition-all">
-              View Schedule <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
 
-          {/* Daily Tips */}
-          <div className="bg-white p-6 rounded-3xl shadow-warm border border-cream-border hover:border-teal-light transition-colors group">
-            <div className="flex items-center justify-between mb-6">
-              <div className="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center text-amber-500 group-hover:bg-amber-200 transition-colors">
-                <Sun className="w-6 h-6" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2">
+                <p className="text-warmGray-body mb-4">Here are your current medications, upcoming doses, and any important notes. Contact your care team or pharmacist if you have questions.</p>
+                <button className="text-teal-DEFAULT font-bold text-sm flex items-center gap-1 hover:gap-2 transition-all">
+                  View Schedule <ChevronRight className="w-4 h-4" />
+                </button>
               </div>
-              <span className="text-xs font-bold bg-amber-100 text-amber-600 px-3 py-1 rounded-full">
-                New
-              </span>
+
+              <div className="md:col-span-1 flex flex-col gap-3">
+                <div className="bg-cream-card rounded-lg p-4 border border-cream-border">
+                  <p className="text-sm font-medium text-warmGray-heading">Next dose</p>
+                  <p className="text-warmGray-body">Today, 6:00 PM</p>
+                </div>
+                <div className="bg-cream-card rounded-lg p-4 border border-cream-border">
+                  <p className="text-sm font-medium text-warmGray-heading">Refill</p>
+                  <p className="text-warmGray-body">2 months left</p>
+                </div>
+              </div>
             </div>
-            <h3 className="text-xl font-bold text-warmGray-heading mb-2">
-              Daily Wellness
-            </h3>
-            <p className="text-warmGray-body text-sm mb-4">
-              Try a 5-minute breathing exercise to reduce stress before your
-              appointment.
-            </p>
-            <button className="text-teal-DEFAULT font-bold text-sm flex items-center gap-1 hover:gap-2 transition-all">
-              Start Exercise <ChevronRight className="w-4 h-4" />
-            </button>
           </div>
         </div>
 
