@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import React, { useState } from 'react';
 import { RoleSelectPage } from './pages/RoleSelectPage';
 import { SignUpPage } from './pages/SignUpPage';
@@ -41,46 +42,40 @@ export function App() {
   const handleBackToLogin = () => {
     setAuthStep('login');
   };
+=======
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
+
+function App() {
+  const [count, setCount] = useState(0)
+
+>>>>>>> Stashed changes
   return (
-    <div className="font-sans antialiased text-warmGray-body bg-cream-base min-h-screen">
-      {authStep === 'role-select' &&
-      <RoleSelectPage
-        onSelectRole={handleRoleSelect}
-        onSignUp={handleSignUpClick} />
-
-      }
-
-      {authStep === 'sign-up' &&
-      <SignUpPage
-        onBack={handleBackToRoleSelect}
-        onSubmit={handleSignUpSubmit} />
-
-      }
-
-      {authStep === 'login' &&
-      <LoginPage
-        role={selectedRole}
-        onBack={handleBackToRoleSelect}
-        onSubmit={handleLoginSubmit} />
-
-      }
-
-      {authStep === 'verify' &&
-      <VerifyCodePage
-        role={selectedRole}
-        phone={phoneNumber}
-        onBack={handleBackToLogin}
-        onVerify={handleVerifySuccess} />
-
-      }
-
-      {authStep === 'dashboard' && selectedRole === 'nurse' &&
-      <NurseDashboard onLogout={handleLogout} />
-      }
-
-      {authStep === 'dashboard' && selectedRole === 'patient' &&
-      <PatientDashboard onLogout={handleLogout} />
-      }
-    </div>);
-
+    <>
+      <div>
+        <a href="https://vite.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </div>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.tsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
+    </>
+  )
 }
+
+export default App
