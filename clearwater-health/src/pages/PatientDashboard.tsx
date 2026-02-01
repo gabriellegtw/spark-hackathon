@@ -13,8 +13,9 @@ import {
 'lucide-react';
 interface PatientDashboardProps {
   onLogout: () => void;
+  onReschedule: () => void;
 }
-export function PatientDashboard({ onLogout }: PatientDashboardProps) {
+export function PatientDashboard({ onLogout, onReschedule }: PatientDashboardProps) {
 
   const [isEmergency, setIsEmergency] = useState<boolean>(() => {
     const saved = localStorage.getItem('emergencyMode');
@@ -95,14 +96,13 @@ export function PatientDashboard({ onLogout }: PatientDashboardProps) {
                   <Clock className={`w-4 h-4 ${isEmergency ? 'text-coral' : 'text-teal-DEFAULT'}`} />
                 </div>
                 <span className={`font-medium ${isEmergency ? 'text-coral font-bold' : ''}`}>
-                  {isEmergency ? 'Arriving Now' : '2nd February 2026, 6:00 PM'}
+                  {isEmergency ? 'Arriving Now' : 'Today, 6:00 PM'}
                 </span>
               </div>
               {/* ... (Keep Video/Virtual Consultation line the same) */}
             </div>
           </div>
 
-          {/* 3. The Action Box: Background and Button color changes */}
           <div className={`rounded-2xl p-6 md:w-64 flex flex-col items-center text-center border transition-colors ${
             isEmergency ? 'bg-coral/5 border-coral/20' : 'bg-cream-base border-cream-border'
           }`}>
@@ -129,7 +129,8 @@ export function PatientDashboard({ onLogout }: PatientDashboardProps) {
         {/* 4. Footer ID change */}
         <div className="pt-6 border-t border-cream-border flex items-center justify-between text-sm text-warmGray-light">
           <span>Appointment ID: {isEmergency ? '#88392' : '#88393'}</span>
-          <button className="text-teal-DEFAULT font-bold hover:underline">
+          <button className="text-teal-DEFAULT font-bold hover:underline"
+          onClick={onReschedule}>
             Reschedule
           </button>
         </div>
