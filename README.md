@@ -74,14 +74,3 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 # Start development server
 npm run dev
-
-project structure
-src/
-├── lib/            # Supabase client and authentication logic
-├── pages/          # Application pages (Dashboards, Auth, etc.)
-│   ├── NurseDashboard.tsx
-│   ├── PatientDashboard.tsx
-│   ├── CallNursePage.tsx
-│   └── ...
-├── App.tsx         # Main application component and routing logic
-└── index.css       # Global styles and Tailwind directives
