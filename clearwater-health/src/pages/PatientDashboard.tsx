@@ -122,11 +122,14 @@ export function PatientDashboard({ onLogout, onCallNurse, userName }: PatientDas
                     ? "Your nurse has requested an immediate check-in. Please join now."
                     : "Your care team is ready. You can join the waiting room 10 minutes early."}
                 </p>
-                <button className={`w-full py-3 rounded-xl font-bold transition-all shadow-lg ${isEmergency
-                  ? 'bg-coral hover:bg-red-600 text-white shadow-coral/20 scale-105'
-                  : 'bg-teal-medium hover:bg-teal-dark text-white shadow-teal-DEFAULT/20'
-                  }`}>
-                  {isEmergency ? 'Join Priority Call' : 'Join Call'}
+                <button
+                  onClick={isEmergency ? onCallNurse : undefined}
+                  disabled={!isEmergency}
+                  className={`w-full py-3 rounded-xl font-bold transition-all shadow-lg ${isEmergency
+                    ? 'bg-coral hover:bg-red-600 text-white shadow-coral/20 scale-105 cursor-pointer'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    }`}>
+                  {isEmergency ? 'Join Priority Call' : 'Not Started'}
                 </button>
               </div>
             </div>

@@ -97,7 +97,10 @@ const patients: Patient[] = [
   }];
 
 export function NurseDashboard({ onLogout, userName = "Sarah" }: NurseDashboardProps) {
-  const [emergencyMode, setEmergencyMode] = useState(false);
+  const [emergencyMode, setEmergencyMode] = useState(() => {
+    const saved = localStorage.getItem('emergencyMode');
+    return saved ? JSON.parse(saved) : false;
+  });
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
