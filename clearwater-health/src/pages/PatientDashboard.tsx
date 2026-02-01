@@ -1,14 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Video,
-  Building2,
   Calendar,
   Clock,
-  MapPin,
   ChevronRight,
   Pill,
-  Sun,
-  LogOut,
   Phone
 } from 'lucide-react';
 
@@ -150,14 +146,6 @@ export function PatientDashboard({ onLogout, onCallNurse }: PatientDashboardProp
               </div>
               <span className="text-sm font-bold bg-sage-light/30 text-sage-DEFAULT px-3 py-1 rounded-full">On Track</span>
             </div>
-            <h3 className="text-xl font-bold text-warmGray-heading mb-2">Medications</h3>
-            <p className="text-warmGray-body text-sm mb-4">
-              Next dose: Metoprolol (50mg) with dinner.
-            </p>
-            <button className="text-teal-DEFAULT font-bold text-sm flex items-center gap-1 hover:gap-2 transition-all">
-              View Schedule <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="md:col-span-2">
@@ -178,14 +166,8 @@ export function PatientDashboard({ onLogout, onCallNurse }: PatientDashboardProp
                 </div>
               </div>
             </div>
-            <h3 className="text-xl font-bold text-warmGray-heading mb-2">Daily Wellness</h3>
-            <p className="text-warmGray-body text-sm mb-4">
-              Try a 5-minute breathing exercise to reduce stress before your appointment.
-            </p>
-            <button className="text-teal-DEFAULT font-bold text-sm flex items-center gap-1 hover:gap-2 transition-all">
-              Start Exercise <ChevronRight className="w-4 h-4" />
-            </button>
           </div>
+
         </div>
 
         {/* Support Footer */}
