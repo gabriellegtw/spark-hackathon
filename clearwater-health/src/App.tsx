@@ -120,7 +120,11 @@ export function App() {
           lastName={lastName}
           onBack={handleBackToLogin}
           onVerify={handleVerifySuccess} />
+      }
 
+
+      {authStep === 'calling-nurse' &&
+        <CallNursePage onEndCall={handleEndCall} />
       }
 
       {authStep === 'calling-nurse' &&

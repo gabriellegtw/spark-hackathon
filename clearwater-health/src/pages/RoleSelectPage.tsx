@@ -1,4 +1,3 @@
-import React from 'react';
 import { Heart, Stethoscope, ArrowRight, UserPlus } from 'lucide-react';
 interface RoleSelectPageProps {
   onSelectRole: (role: 'patient' | 'nurse') => void;

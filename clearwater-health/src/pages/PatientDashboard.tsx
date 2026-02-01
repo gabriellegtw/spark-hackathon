@@ -99,19 +99,41 @@ export function PatientDashboard({ onLogout, onCallNurse, userName, onReschedule
                   {isEmergency ? 'Cardiology Department' : 'Neurology Department'}
                 </p>
 
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-3 text-warmGray-heading">
-                <div className="w-8 h-8 rounded-full bg-cream-card flex items-center justify-center">
-                  {/* 2. Clock icon color change */}
-                  <Clock className={`w-4 h-4 ${isEmergency ? 'text-coral' : 'text-teal-DEFAULT'}`} />
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center gap-3 text-warmGray-heading">
+                    <div className="w-8 h-8 rounded-full bg-cream-card flex items-center justify-center">
+                      <Clock className={`w-4 h-4 ${isEmergency ? 'text-coral' : 'text-teal-DEFAULT'}`} />
+                    </div>
+                    <span className={`font-medium ${isEmergency ? 'text-coral font-bold' : ''}`}>
+                      {isEmergency ? 'Arriving Now' : 'Today, 6:00 PM'}
+                    </span>
+                  </div>
                 </div>
-                <span className={`font-medium ${isEmergency ? 'text-coral font-bold' : ''}`}>
-                  {isEmergency ? 'Arriving Now' : 'Today, 6:00 PM'}
-                </span>
               </div>
-              {/* ... (Keep Video/Virtual Consultation line the same) */}
+
+              {/* Action Box */}
+              <div className={`rounded-2xl p-6 md:w-64 flex flex-col items-center text-center border transition-colors ${isEmergency ? 'bg-coral/5 border-coral/20' : 'bg-cream-base border-cream-border'
+                }`}>
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors ${isEmergency ? 'bg-coral text-white animate-pulse' : 'bg-teal-light/30 text-teal-dark'
+                  }`}>
+                  <Video className="w-8 h-8" />
+                </div>
+                <p className="text-sm text-warmGray-body mb-4">
+                  {isEmergency
+                    ? "Your nurse has requested an immediate check-in. Please join now."
+                    : "Your care team is ready. You can join the waiting room 10 minutes early."}
+                </p>
+                <button
+                  onClick={isEmergency ? onCallNurse : undefined}
+                  disabled={!isEmergency}
+                  className={`w-full py-3 rounded-xl font-bold transition-all shadow-lg ${isEmergency
+                    ? 'bg-coral hover:bg-red-600 text-white shadow-coral/20 scale-105 cursor-pointer'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    }`}>
+                  {isEmergency ? 'Join Priority Call' : 'Not Started'}
+                </button>
+              </div>
             </div>
-          </div>
 
           <div className={`rounded-2xl p-6 md:w-64 flex flex-col items-center text-center border transition-colors ${
             isEmergency ? 'bg-coral/5 border-coral/20' : 'bg-cream-base border-cream-border'
@@ -120,19 +142,12 @@ export function PatientDashboard({ onLogout, onCallNurse, userName, onReschedule
               isEmergency ? 'bg-coral text-white animate-pulse' : 'bg-teal-light/30 text-teal-dark'
             }`}>
               <Video className="w-8 h-8" />
+            <div className="pt-6 border-t border-cream-border flex items-center justify-between text-sm text-warmGray-light">
+              <span>Appointment ID: {isEmergency ? '#88392' : '#88393'}</span>
+              <button className="text-teal-DEFAULT font-bold hover:underline">
+                Reschedule
+              </button>
             </div>
-            <p className="text-sm text-warmGray-body mb-4">
-              {isEmergency 
-                ? "Your nurse has requested an immediate check-in. Please join now."
-                : "Your care team is ready. You can join the waiting room 10 minutes early."}
-            </p>
-            <button className={`w-full py-3 rounded-xl font-bold transition-all shadow-lg ${
-              isEmergency 
-                ? 'bg-coral hover:bg-red-600 text-white shadow-coral/20 scale-105' 
-                : 'bg-teal-medium hover:bg-teal-dark text-white shadow-teal-DEFAULT/20'
-            }`}>
-              {isEmergency ? 'Join Priority Call' : 'Join Call'} {/* Dynamic Button Text */}
-            </button>
           </div>
         </div>
 
