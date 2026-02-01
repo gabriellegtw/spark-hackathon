@@ -101,8 +101,10 @@ export function NurseDashboard({ onLogout }: NurseDashboardProps) {
     }
   };
   const handleConfirm = () => {
+    const newMode = !emergencyMode;
     setEmergencyMode(!emergencyMode);
     setShowConfirmModal(false);
+    localStorage.setItem('emergencyMode', JSON.stringify(newMode));
   };
   const handleCancel = () => {
     setShowConfirmModal(false);

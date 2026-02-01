@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Video,
   Building2,
@@ -15,9 +15,30 @@ interface PatientDashboardProps {
   onLogout: () => void;
 }
 export function PatientDashboard({ onLogout }: PatientDashboardProps) {
+
+  const [isEmergency, setIsEmergency] = useState<boolean>(() => {
+    const saved = localStorage.getItem('emergencyMode');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'emergencyMode' && e.newValue !== null) {
+        setIsEmergency(JSON.parse(e.newValue));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  console.log("Current Emergency Mode State:", isEmergency);
+  
   return (
     <div className="min-h-screen w-full bg-cream-base pb-20">
       {/* Header */}
+      
       <header className="px-6 py-6 bg-white/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
