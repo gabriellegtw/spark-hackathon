@@ -19,9 +19,10 @@ export function App() {
   const handleSignUpClick = () => {
     setAuthStep('sign-up');
   };
-  const handleSignUpSubmit = (role: UserRole) => {
+  const handleSignUpSubmit = (role: UserRole, phone: string) => {
     setSelectedRole(role);
-    setAuthStep('login');
+    setPhoneNumber(phone);
+    setAuthStep('verify');
   };
   const handleLoginSubmit = (phone: string) => {
     setPhoneNumber(phone);
