@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { ArrowLeft, ShieldCheck, Loader2 } from 'lucide-react';
-import { verifyOTP, sendOTP, createUserRecord } from '../lib/auth';
+import { verifyOTP, sendOTP, createUserRecord, getUserProfile, signOut } from '../lib/auth';
 
 interface VerifyCodePageProps {
   role: 'patient' | 'nurse';
@@ -69,7 +69,7 @@ export function VerifyCodePage({
         if (error) {
           setError(error.message);
         } else if (data && data.user) { // Check if we have user data
-          // If we have first/last name, create the user record
+          // If we have first/last name, it's a sign-up flow -> create the user record
           if (firstName && lastName) {
             const { error: createError } = await createUserRecord(
               data.user.id,
@@ -78,12 +78,22 @@ export function VerifyCodePage({
             );
             if (createError) {
               console.error("Failed to create user record:", createError);
-              // We might not want to block login on this, but good to know.
-              // For now, let's proceed but maybe warn?
-              // Actually, if this fails, the user is technically logged in but not in our users table.
+              // Handle create error if necessary
+            }
+            onVerify();
+          } else {
+            // LOGIN FLOW: Check if user profile exists in public.users
+            const { data: profile, error: profileError } = await getUserProfile(data.user.id, role);
+
+            if (profileError || !profile) {
+              // Profile not found -> This means auth user exists but no app profile
+              await signOut();
+              setError("Account not found. Please sign up first.");
+            } else {
+              // Profile found -> proceed
+              onVerify();
             }
           }
-          onVerify();
         }
       } catch (err) {
         setError('Verification failed. Please try again.');
