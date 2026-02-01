@@ -14,7 +14,14 @@ import {
 interface NurseDashboardProps {
   onLogout: () => void;
 }
-type PatientStatus = 'Stable' | 'Needs Attention' | 'Urgent';
+
+type UrgencyLevel = 'Low' | 'Medium' | 'High';
+
+type PatientStatus = 
+  | { type: 'Stable' }
+  | { type: 'Needs Attention'} 
+  | { type: 'Urgent'; level: UrgencyLevel}; 
+
 interface Patient {
   id: string;
   name: string;
@@ -30,7 +37,7 @@ const patients: Patient[] = [
   id: '1',
   name: 'Eleanor Rigby',
   room: '304',
-  status: 'Stable',
+  status: { type: 'Stable' },
   lastCheck: '15m ago',
   initials: 'ER',
   age: 72,
@@ -40,7 +47,7 @@ const patients: Patient[] = [
   id: '2',
   name: 'Arthur Dent',
   room: '305',
-  status: 'Needs Attention',
+  status: { type: 'Needs Attention' },
   lastCheck: '45m ago',
   initials: 'AD',
   age: 42,
@@ -50,7 +57,7 @@ const patients: Patient[] = [
   id: '3',
   name: 'Sarah Connor',
   room: '308',
-  status: 'Urgent',
+  status: { type: 'Urgent', level: 'High' },
   lastCheck: '5m ago',
   initials: 'SC',
   age: 35,
@@ -60,7 +67,7 @@ const patients: Patient[] = [
   id: '4',
   name: 'Miles Morales',
   room: '310',
-  status: 'Stable',
+  status: { type: 'Stable' },
   lastCheck: '1h ago',
   initials: 'MM',
   age: 19,
@@ -70,7 +77,7 @@ const patients: Patient[] = [
   id: '5',
   name: 'Diana Prince',
   room: '312',
-  status: 'Stable',
+  status: { type: 'Urgent', level: 'Medium' },
   lastCheck: '20m ago',
   initials: 'DP',
   age: 28,
@@ -80,7 +87,7 @@ const patients: Patient[] = [
   id: '6',
   name: 'Tony Stark',
   room: '315',
-  status: 'Needs Attention',
+  status: { type: 'Needs Attention' },
   lastCheck: '30m ago',
   initials: 'TS',
   age: 50,
@@ -108,16 +115,25 @@ export function NurseDashboard({ onLogout }: NurseDashboardProps) {
     setShowConfirmModal(false);
   };
   const getStatusColor = (status: PatientStatus) => {
-    switch (status) {
-      case 'Stable':
-        return 'bg-sage-light text-sage-DEFAULT border-sage-light';
-      case 'Needs Attention':
-        return 'bg-amber-100 text-amber-600 border-amber-200';
-      case 'Urgent':
-        return 'bg-coral-light/40 text-coral-DEFAULT border-coral-light';
-      default:
-        return 'bg-gray-100 text-gray-600';
+    if (status.type === 'Stable') {
+      return 'bg-teal-400 text-sage-DEFAULT border-sage-light';
     }
+    if (status.type === 'Needs Attention') {
+      return 'bg-amber-100 text-amber-600 border-amber-200';
+    }
+    if (status.type === 'Urgent') {
+      if (status.level === 'High') return 'bg-red-500 text-gray-700 border-gray-800';
+      if (status.level === 'Medium') return 'bg-red-400 text-gray-700 border-gray-800';
+      return 'bg-red-300 text-gray-700 border-gray-500';
+    }
+    return 'bg-gray-100 text-gray-700';
+  };
+
+  const getStatusLabel = (status: PatientStatus) => {
+    if (status.type === 'Urgent') {
+      return `Urgent${status.level ? ` • ${status.level}` : ''}`;
+    }
+    return status.type;
   };
   const filteredPatients = patients.filter(
     (p) =>
@@ -183,7 +199,7 @@ export function NurseDashboard({ onLogout }: NurseDashboardProps) {
 
       {/* Emergency Banner */}
       {emergencyMode &&
-      <div className="bg-coral-DEFAULT text-white py-3 px-6 text-center animate-pulse">
+      <div className="bg-coral-DEFAULT text-red-500 py-3 px-10 text-center-bold animate-pulse">
           <div className="max-w-7xl mx-auto flex items-center justify-center gap-3">
             <AlertTriangle className="w-5 h-5" />
             <span className="font-bold">
@@ -224,12 +240,12 @@ export function NurseDashboard({ onLogout }: NurseDashboardProps) {
           {filteredPatients.map((patient) =>
           <div
             key={patient.id}
-            className={`bg-white rounded-3xl p-6 border-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-warm-hover group ${emergencyMode && patient.status === 'Urgent' ? 'border-coral-DEFAULT shadow-lg shadow-coral-DEFAULT/20' : 'border-cream-border shadow-warm'}`}>
+            className={`bg-white rounded-3xl p-6 border-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-warm-hover group ${emergencyMode && patient.status.type === 'Urgent' ? 'border-coral-DEFAULT shadow-lg shadow-coral-DEFAULT/20' : 'border-cream-border shadow-warm'}`}>
 
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-4">
                   <div
-                  className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-bold ${patient.status === 'Urgent' ? 'bg-coral-light/30 text-coral-DEFAULT' : 'bg-teal-light/30 text-teal-dark'}`}>
+                  className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-bold ${patient.status.type === 'Urgent' ? 'bg-coral-light/30 text-coral-DEFAULT' : 'bg-teal-light/30 text-teal-dark'}`}>
 
                     {patient.initials}
                   </div>
@@ -260,7 +276,7 @@ export function NurseDashboard({ onLogout }: NurseDashboardProps) {
                 <span
                 className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(patient.status)}`}>
 
-                  {patient.status}
+                  {getStatusLabel(patient.status)}
                 </span>
                 <div className="flex items-center gap-1 text-xs text-warmGray-light">
                   <Clock className="w-3 h-3" />
