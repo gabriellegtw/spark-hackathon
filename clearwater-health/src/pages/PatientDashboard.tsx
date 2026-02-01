@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Video,
-  Building2,
   Calendar,
   Clock,
-  MapPin,
   ChevronRight,
   Pill,
-  Sun,
-  LogOut,
-  Phone } from
-'lucide-react';
+  Phone
+} from 'lucide-react';
+
 interface PatientDashboardProps {
   onLogout: () => void;
+  onCallNurse: () => void;
+  userName: string;
   onReschedule: () => void;
 }
-export function PatientDashboard({ onLogout, onReschedule }: PatientDashboardProps) {
 
+export function PatientDashboard({ onLogout, onCallNurse, userName, onReschedule }: PatientDashboardProps) {
+  // --- Emergency Mode Logic (Merged from main) ---
   const [isEmergency, setIsEmergency] = useState<boolean>(() => {
     const saved = localStorage.getItem('emergencyMode');
     return saved ? JSON.parse(saved) : false;
@@ -30,28 +30,37 @@ export function PatientDashboard({ onLogout, onReschedule }: PatientDashboardPro
     };
 
     window.addEventListener('storage', handleStorageChange);
-
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   console.log("Current Emergency Mode State:", isEmergency);
-  
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map((part) => part[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  };
+
+  const initials = getInitials(userName);
+
   return (
     <div className="min-h-screen w-full bg-cream-base pb-20">
       {/* Header */}
-      
       <header className="px-6 py-6 bg-white/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-teal-medium rounded-full flex items-center justify-center text-white font-bold">
-              MP
+              {initials}
             </div>
             <span className="font-bold text-warmGray-heading">Clearwater Health</span>
           </div>
           <button
             onClick={onLogout}
-            className="text-sm font-medium text-warmGray-body hover:text-teal-DEFAULT transition-colors">
-
+            className="text-sm font-medium text-warmGray-body hover:text-teal-DEFAULT transition-colors"
+          >
             Sign Out
           </button>
         </div>
@@ -62,7 +71,7 @@ export function PatientDashboard({ onLogout, onReschedule }: PatientDashboardPro
         <div className="mb-10 flex items-start justify-between gap-6">
           <div>
             <h1 className="text-3xl font-bold text-warmGray-heading mb-2">
-              Hello, Michael
+              Hello, {userName}
             </h1>
             <p className="text-lg text-warmGray-body">
               We're here for you. How are you feeling today?
@@ -73,21 +82,22 @@ export function PatientDashboard({ onLogout, onReschedule }: PatientDashboardPro
           </button>
         </div>
 
-         <div className="bg-white rounded-[2rem] shadow-warm overflow-hidden mb-10 border border-cream-border">
+        {/* Appointment Card */}
+        <div className="bg-white rounded-[2rem] shadow-warm overflow-hidden mb-10 border border-cream-border">
           <div className="bg-teal-medium/10 p-6 flex items-center gap-3 border-b border-teal-light/20">
             <Calendar className="w-5 h-5 text-teal-dark" />
             <span className="font-bold text-teal-dark">Up Next</span>
           </div>
 
-        <div className="p-8">
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
-          <div>
-            <h2 className="text-2xl font-bold text-warmGray-heading mb-2">
-              {isEmergency ? 'Dr. Sarah Chen' : 'Dr. Laura Smith'}
-            </h2>
-            <p className="text-warmGray-body mb-4">
-              {isEmergency ? 'Cardiology Department' : 'Neurology Department'}
-            </p>
+          <div className="p-8">
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
+              <div>
+                <h2 className="text-2xl font-bold text-warmGray-heading mb-2">
+                  {isEmergency ? 'Dr. Sarah Chen' : 'Dr. Laura Smith'}
+                </h2>
+                <p className="text-warmGray-body mb-4">
+                  {isEmergency ? 'Cardiology Department' : 'Neurology Department'}
+                </p>
 
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3 text-warmGray-heading">
@@ -142,48 +152,40 @@ export function PatientDashboard({ onLogout, onReschedule }: PatientDashboardPro
           {/* Medications */}
           <div className="bg-white p-6 rounded-3xl shadow-warm border border-cream-border hover:border-teal-light transition-colors group">
             <div className="flex items-center justify-between mb-6">
-              <div className="w-12 h-12 bg-sage-light/40 rounded-2xl flex items-center justify-center text-sage-DEFAULT group-hover:bg-sage-light/60 transition-colors">
-                <Pill className="w-6 h-6" />
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-sage-light/40 rounded-2xl flex items-center justify-center text-sage-DEFAULT transition-colors">
+                  <Pill className="w-8 h-8" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-warmGray-heading mb-1">Medications</h3>
+                  <p className="text-warmGray-body">Next dose: Metoprolol (50mg) with dinner.</p>
+                </div>
               </div>
-              <span className="text-xs font-bold bg-sage-light/30 text-sage-DEFAULT px-3 py-1 rounded-full">
-                On Track
-              </span>
+              <span className="text-sm font-bold bg-sage-light/30 text-sage-DEFAULT px-3 py-1 rounded-full">On Track</span>
             </div>
-            <h3 className="text-xl font-bold text-warmGray-heading mb-2">
-              Medications
-            </h3>
-            <p className="text-warmGray-body text-sm mb-4">
-              Next dose: Metoprolol (50mg) with dinner.
-            </p>
-            <button className="text-teal-DEFAULT font-bold text-sm flex items-center gap-1 hover:gap-2 transition-all">
-              View Schedule <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-          
 
-          {/* Daily Tips */}
-          <div className="bg-white p-6 rounded-3xl shadow-warm border border-cream-border hover:border-teal-light transition-colors group">
-            <div className="flex items-center justify-between mb-6">
-              <div className="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center text-amber-500 group-hover:bg-amber-200 transition-colors">
-                <Sun className="w-6 h-6" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2">
+                <p className="text-warmGray-body mb-4">Here are your current medications, upcoming doses, and any important notes. Contact your care team or pharmacist if you have questions.</p>
+                <button className="text-teal-DEFAULT font-bold text-sm flex items-center gap-1 hover:gap-2 transition-all">
+                  View Schedule <ChevronRight className="w-4 h-4" />
+                </button>
               </div>
-              <span className="text-xs font-bold bg-amber-100 text-amber-600 px-3 py-1 rounded-full">
-                New
-              </span>
+
+              <div className="md:col-span-1 flex flex-col gap-3">
+                <div className="bg-cream-card rounded-lg p-4 border border-cream-border">
+                  <p className="text-sm font-medium text-warmGray-heading">Next dose</p>
+                  <p className="text-warmGray-body">Today, 6:00 PM</p>
+                </div>
+                <div className="bg-cream-card rounded-lg p-4 border border-cream-border">
+                  <p className="text-sm font-medium text-warmGray-heading">Refill</p>
+                  <p className="text-warmGray-body">2 months left</p>
+                </div>
+              </div>
             </div>
-            <h3 className="text-xl font-bold text-warmGray-heading mb-2">
-              Daily Wellness
-            </h3>
-            <p className="text-warmGray-body text-sm mb-4">
-              Try a 5-minute breathing exercise to reduce stress before your
-              appointment.
-            </p>
-            <button className="text-teal-DEFAULT font-bold text-sm flex items-center gap-1 hover:gap-2 transition-all">
-              Start Exercise <ChevronRight className="w-4 h-4" />
-            </button>
           </div>
+
         </div>
-        
 
         {/* Support Footer */}
         <div className="bg-teal-dark rounded-3xl p-8 text-white text-center relative overflow-hidden">
@@ -195,16 +197,18 @@ export function PatientDashboard({ onLogout, onReschedule }: PatientDashboardPro
           <div className="relative z-10">
             <h3 className="text-2xl font-bold mb-3">Need immediate help?</h3>
             <p className="text-teal-light mb-6 max-w-md mx-auto">
-              Our nurse line is available 24/7 for any urgent questions or
-              concerns.
+              Our nurse line is available 24/7 for any urgent questions or concerns.
             </p>
-            <button className="bg-white text-teal-dark px-6 py-3 rounded-xl font-bold hover:bg-teal-light transition-colors inline-flex items-center gap-2">
+            <button
+              onClick={onCallNurse}
+              className="bg-white text-teal-dark px-6 py-3 rounded-xl font-bold hover:bg-teal-light transition-colors inline-flex items-center gap-2"
+            >
               <Phone className="w-5 h-5" />
               Call Nurse Line
             </button>
           </div>
         </div>
       </main>
-    </div>);
-
+    </div>
+  );
 }

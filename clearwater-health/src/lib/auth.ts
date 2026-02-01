@@ -32,6 +32,44 @@ export async function verifyOTP(phone: string, token: string) {
     }
 }
 
+export async function createUserRecord(
+    userId: string,
+    phone: string,
+    profile: { firstName: string; lastName: string; role: 'patient' | 'nurse' }
+) {
+    const { error } = await supabase.from('users').insert({
+        id: userId,
+        phone: phone,
+        first_name: profile.firstName,
+        last_name: profile.lastName,
+        role: profile.role,
+    })
+
+    if (error) {
+        console.error('Error creating user record:', error.message)
+        return { error }
+    }
+
+    console.log('User record created in public.users table')
+    return { error: null }
+}
+
+export async function getUserProfile(userId: string, role: string) {
+    const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .eq('role', role)
+        .single()
+
+    if (error) {
+        console.error('Error fetching user profile:', error.message)
+        return { data: null, error }
+    }
+
+    return { data, error: null }
+}
+
 export async function getCurrentUser() {
     const {
         data: { user },

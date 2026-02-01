@@ -1,10 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { ArrowLeft, ShieldCheck, Loader2 } from 'lucide-react';
-import { verifyOTP, sendOTP } from '../lib/auth';
+import { verifyOTP, sendOTP, createUserRecord, getUserProfile, signOut } from '../lib/auth';
 
 interface VerifyCodePageProps {
   role: 'patient' | 'nurse';
   phone: string;
+  firstName?: string;
+  lastName?: string;
   onBack: () => void;
   onVerify: () => void;
 }
@@ -12,6 +14,8 @@ interface VerifyCodePageProps {
 export function VerifyCodePage({
   role,
   phone,
+  firstName = '',
+  lastName = '',
   onBack,
   onVerify
 }: VerifyCodePageProps) {
@@ -61,14 +65,39 @@ export function VerifyCodePage({
       setLoading(true);
       const token = code.join('');
       try {
-        const { error } = await verifyOTP(phone, token);
+        const { data, error } = await verifyOTP(phone, token);
         if (error) {
           setError(error.message);
-        } else {
-          onVerify();
+        } else if (data && data.user) { // Check if we have user data
+          // If we have first/last name, it's a sign-up flow -> create the user record
+          if (firstName && lastName) {
+            const { error: createError } = await createUserRecord(
+              data.user.id,
+              phone,
+              { firstName, lastName, role }
+            );
+            if (createError) {
+              console.error("Failed to create user record:", createError);
+              // Handle create error if necessary
+            }
+            onVerify();
+          } else {
+            // LOGIN FLOW: Check if user profile exists in public.users
+            const { data: profile, error: profileError } = await getUserProfile(data.user.id, role);
+
+            if (profileError || !profile) {
+              // Profile not found -> This means auth user exists but no app profile
+              await signOut();
+              setError("Account not found. Please sign up first.");
+            } else {
+              // Profile found -> proceed
+              onVerify();
+            }
+          }
         }
       } catch (err) {
         setError('Verification failed. Please try again.');
+        console.error(err);
       } finally {
         setLoading(false);
       }
