@@ -37,13 +37,18 @@ export function PatientDashboard({ onLogout }: PatientDashboardProps) {
 
       <main className="max-w-3xl mx-auto px-6 pt-8">
         {/* Welcome Section */}
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold text-warmGray-heading mb-2">
-            Hello, Michael
-          </h1>
-          <p className="text-lg text-warmGray-body">
-            We're here for you. How are you feeling today?
-          </p>
+        <div className="mb-10 flex items-start justify-between gap-6">
+          <div>
+            <h1 className="text-3xl font-bold text-warmGray-heading mb-2">
+              Hello, Michael
+            </h1>
+            <p className="text-lg text-warmGray-body">
+              We're here for you. How are you feeling today?
+            </p>
+          </div>
+          <button className="px-6 py-3 bg-teal-medium hover:bg-teal-dark text-white rounded-xl font-bold transition-colors shadow-lg shadow-teal-DEFAULT/20 whitespace-nowrap">
+            Fill Out Form
+          </button>
         </div>
 
         {/* Main Appointment Widget */}
