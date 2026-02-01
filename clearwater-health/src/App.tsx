@@ -6,6 +6,8 @@ import { VerifyCodePage } from './pages/VerifyCodePage';
 import { NurseDashboard } from './pages/NurseDashboard';
 import { PatientDashboard } from './pages/PatientDashboard';
 import { CallNursePage } from './pages/CallNursePage';
+import { AccessibilityProvider } from './context/AccessibilityContext';
+import { AccessibilityButton } from './components/Accessibility';
 type AuthStep = 'role-select' | 'sign-up' | 'login' | 'verify' | 'dashboard' | 'calling-nurse';
 type UserRole = 'nurse' | 'patient';
 import { signOut, getUserProfile, getCurrentUser } from './lib/auth';
@@ -77,55 +79,58 @@ export function App() {
     setAuthStep('dashboard');
   }
   return (
-    <div className="font-sans antialiased text-warmGray-body bg-cream-base min-h-screen">
-      {authStep === 'role-select' &&
-        <RoleSelectPage
-          onSelectRole={handleRoleSelect}
-          onSignUp={handleSignUpClick} />
+    <AccessibilityProvider>
+      <div id="app-content" className="font-sans antialiased text-warmGray-body bg-cream-base min-h-screen">
+        {authStep === 'role-select' &&
+          <RoleSelectPage
+            onSelectRole={handleRoleSelect}
+            onSignUp={handleSignUpClick} />
 
-      }
+        }
 
-      {authStep === 'sign-up' &&
-        <SignUpPage
-          onBack={handleBackToRoleSelect}
-          onSubmit={handleSignUpSubmit} />
+        {authStep === 'sign-up' &&
+          <SignUpPage
+            onBack={handleBackToRoleSelect}
+            onSubmit={handleSignUpSubmit} />
 
-      }
+        }
 
-      {authStep === 'login' &&
-        <LoginPage
-          role={selectedRole}
-          onBack={handleBackToRoleSelect}
-          onSubmit={handleLoginSubmit} />
+        {authStep === 'login' &&
+          <LoginPage
+            role={selectedRole}
+            onBack={handleBackToRoleSelect}
+            onSubmit={handleLoginSubmit} />
 
-      }
+        }
 
-      {authStep === 'verify' &&
-        <VerifyCodePage
-          role={selectedRole}
-          phone={phoneNumber}
-          firstName={firstName}
-          lastName={lastName}
-          onBack={handleBackToLogin}
-          onVerify={handleVerifySuccess} />
+        {authStep === 'verify' &&
+          <VerifyCodePage
+            role={selectedRole}
+            phone={phoneNumber}
+            firstName={firstName}
+            lastName={lastName}
+            onBack={handleBackToLogin}
+            onVerify={handleVerifySuccess} />
 
-      }
+        }
 
-      {authStep === 'calling-nurse' &&
-        <CallNursePage onEndCall={handleEndCall} />
-      }
+        {authStep === 'calling-nurse' &&
+          <CallNursePage onEndCall={handleEndCall} />
+        }
 
-      {authStep === 'dashboard' && selectedRole === 'nurse' &&
-        <NurseDashboard onLogout={handleLogout} userName={firstName} />
-      }
+        {authStep === 'dashboard' && selectedRole === 'nurse' &&
+          <NurseDashboard onLogout={handleLogout} userName={firstName} />
+        }
 
-      {authStep === 'dashboard' && selectedRole === 'patient' &&
-        <PatientDashboard
-          onLogout={handleLogout}
-          onCallNurse={handleCallNurse}
-          userName={firstName}
-        />
-      }
-    </div>);
+        {authStep === 'dashboard' && selectedRole === 'patient' &&
+          <PatientDashboard
+            onLogout={handleLogout}
+            onCallNurse={handleCallNurse}
+            userName={firstName}
+          />
+        }
+      </div>
+      <AccessibilityButton />
+    </AccessibilityProvider>);
 
 }

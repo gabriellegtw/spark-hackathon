@@ -1,3 +1,4 @@
+import React from 'react';
 import { Heart, Stethoscope, ArrowRight, UserPlus } from 'lucide-react';
 interface RoleSelectPageProps {
   onSelectRole: (role: 'patient' | 'nurse') => void;
@@ -16,7 +17,7 @@ export function RoleSelectPage({
             <Heart className="w-8 h-8 text-teal-DEFAULT fill-teal-DEFAULT/20" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-warmGray-heading mb-4">
-            Welcome to Clearview Health
+            Welcome to Clearwater Health
           </h1>
           <p className="text-xl text-warmGray-body max-w-2xl mx-auto">
             We're here to support your journey to better health. Please select
@@ -84,7 +85,7 @@ export function RoleSelectPage({
 
         {/* Footer */}
         <div className="mt-16 text-center text-warmGray-light text-sm">
-          <p>© 2026 Clearview Health. Designed with care.</p>
+          <p>© 2026 Clearwater Health. Designed with care.</p>
         </div>
       </div>
     </div>);
