@@ -11,9 +11,10 @@ import {
 interface PatientDashboardProps {
   onLogout: () => void;
   onCallNurse: () => void;
+  userName: string;
 }
 
-export function PatientDashboard({ onLogout, onCallNurse }: PatientDashboardProps) {
+export function PatientDashboard({ onLogout, onCallNurse, userName }: PatientDashboardProps) {
   // --- Emergency Mode Logic (Merged from main) ---
   const [isEmergency, setIsEmergency] = useState<boolean>(() => {
     const saved = localStorage.getItem('emergencyMode');
@@ -33,6 +34,17 @@ export function PatientDashboard({ onLogout, onCallNurse }: PatientDashboardProp
 
   console.log("Current Emergency Mode State:", isEmergency);
 
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map((part) => part[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  };
+
+  const initials = getInitials(userName);
+
   return (
     <div className="min-h-screen w-full bg-cream-base pb-20">
       {/* Header */}
@@ -40,7 +52,7 @@ export function PatientDashboard({ onLogout, onCallNurse }: PatientDashboardProp
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-teal-medium rounded-full flex items-center justify-center text-white font-bold">
-              MP
+              {initials}
             </div>
             <span className="font-bold text-warmGray-heading">Clearwater Health</span>
           </div>
@@ -58,7 +70,7 @@ export function PatientDashboard({ onLogout, onCallNurse }: PatientDashboardProp
         <div className="mb-10 flex items-start justify-between gap-6">
           <div>
             <h1 className="text-3xl font-bold text-warmGray-heading mb-2">
-              Hello, Michael
+              Hello, {userName}
             </h1>
             <p className="text-lg text-warmGray-body">
               We're here for you. How are you feeling today?
@@ -99,24 +111,21 @@ export function PatientDashboard({ onLogout, onCallNurse }: PatientDashboardProp
               </div>
 
               {/* Action Box */}
-              <div className={`rounded-2xl p-6 md:w-64 flex flex-col items-center text-center border transition-colors ${
-                isEmergency ? 'bg-coral/5 border-coral/20' : 'bg-cream-base border-cream-border'
-              }`}>
-                <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors ${
-                  isEmergency ? 'bg-coral text-white animate-pulse' : 'bg-teal-light/30 text-teal-dark'
+              <div className={`rounded-2xl p-6 md:w-64 flex flex-col items-center text-center border transition-colors ${isEmergency ? 'bg-coral/5 border-coral/20' : 'bg-cream-base border-cream-border'
                 }`}>
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors ${isEmergency ? 'bg-coral text-white animate-pulse' : 'bg-teal-light/30 text-teal-dark'
+                  }`}>
                   <Video className="w-8 h-8" />
                 </div>
                 <p className="text-sm text-warmGray-body mb-4">
-                  {isEmergency 
+                  {isEmergency
                     ? "Your nurse has requested an immediate check-in. Please join now."
                     : "Your care team is ready. You can join the waiting room 10 minutes early."}
                 </p>
-                <button className={`w-full py-3 rounded-xl font-bold transition-all shadow-lg ${
-                  isEmergency 
-                    ? 'bg-coral hover:bg-red-600 text-white shadow-coral/20 scale-105' 
-                    : 'bg-teal-medium hover:bg-teal-dark text-white shadow-teal-DEFAULT/20'
-                }`}>
+                <button className={`w-full py-3 rounded-xl font-bold transition-all shadow-lg ${isEmergency
+                  ? 'bg-coral hover:bg-red-600 text-white shadow-coral/20 scale-105'
+                  : 'bg-teal-medium hover:bg-teal-dark text-white shadow-teal-DEFAULT/20'
+                  }`}>
                   {isEmergency ? 'Join Priority Call' : 'Join Call'}
                 </button>
               </div>

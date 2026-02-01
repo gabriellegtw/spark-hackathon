@@ -8,7 +8,7 @@ import { PatientDashboard } from './pages/PatientDashboard';
 import { CallNursePage } from './pages/CallNursePage';
 type AuthStep = 'role-select' | 'sign-up' | 'login' | 'verify' | 'dashboard' | 'calling-nurse';
 type UserRole = 'nurse' | 'patient';
-import { signOut } from './lib/auth';
+import { signOut, getUserProfile, getCurrentUser } from './lib/auth';
 export function App() {
   const [authStep, setAuthStep] = useState<AuthStep>('role-select');
   const [selectedRole, setSelectedRole] = useState<UserRole>('patient');
@@ -45,7 +45,18 @@ export function App() {
     setLastName('');
     setAuthStep('verify');
   };
-  const handleVerifySuccess = () => {
+  const handleVerifySuccess = async () => {
+    // If we don't have the name (login flow), fetch it
+    if (!firstName || !lastName) {
+      const { user } = await getCurrentUser();
+      if (user) {
+        const { data } = await getUserProfile(user.id, selectedRole);
+        if (data) {
+          setFirstName(data.first_name);
+          setLastName(data.last_name);
+        }
+      }
+    }
     setAuthStep('dashboard');
   };
   const handleLogout = async () => {
@@ -105,13 +116,14 @@ export function App() {
       }
 
       {authStep === 'dashboard' && selectedRole === 'nurse' &&
-        <NurseDashboard onLogout={handleLogout} />
+        <NurseDashboard onLogout={handleLogout} userName={firstName} />
       }
 
       {authStep === 'dashboard' && selectedRole === 'patient' &&
         <PatientDashboard
           onLogout={handleLogout}
           onCallNurse={handleCallNurse}
+          userName={firstName}
         />
       }
     </div>);

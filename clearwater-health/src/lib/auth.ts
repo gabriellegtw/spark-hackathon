@@ -54,6 +54,22 @@ export async function createUserRecord(
     return { error: null }
 }
 
+export async function getUserProfile(userId: string, role: string) {
+    const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .eq('role', role)
+        .single()
+
+    if (error) {
+        console.error('Error fetching user profile:', error.message)
+        return { data: null, error }
+    }
+
+    return { data, error: null }
+}
+
 export async function getCurrentUser() {
     const {
         data: { user },
