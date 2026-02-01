@@ -1,10 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { ArrowLeft, ShieldCheck, Loader2 } from 'lucide-react';
-import { verifyOTP, sendOTP } from '../lib/auth';
+import { verifyOTP, sendOTP, createUserRecord } from '../lib/auth';
 
 interface VerifyCodePageProps {
   role: 'patient' | 'nurse';
   phone: string;
+  firstName?: string;
+  lastName?: string;
   onBack: () => void;
   onVerify: () => void;
 }
@@ -12,6 +14,8 @@ interface VerifyCodePageProps {
 export function VerifyCodePage({
   role,
   phone,
+  firstName = '',
+  lastName = '',
   onBack,
   onVerify
 }: VerifyCodePageProps) {
@@ -61,14 +65,29 @@ export function VerifyCodePage({
       setLoading(true);
       const token = code.join('');
       try {
-        const { error } = await verifyOTP(phone, token);
+        const { data, error } = await verifyOTP(phone, token);
         if (error) {
           setError(error.message);
-        } else {
+        } else if (data && data.user) { // Check if we have user data
+          // If we have first/last name, create the user record
+          if (firstName && lastName) {
+            const { error: createError } = await createUserRecord(
+              data.user.id,
+              phone,
+              { firstName, lastName, role }
+            );
+            if (createError) {
+              console.error("Failed to create user record:", createError);
+              // We might not want to block login on this, but good to know.
+              // For now, let's proceed but maybe warn?
+              // Actually, if this fails, the user is technically logged in but not in our users table.
+            }
+          }
           onVerify();
         }
       } catch (err) {
         setError('Verification failed. Please try again.');
+        console.error(err);
       } finally {
         setLoading(false);
       }

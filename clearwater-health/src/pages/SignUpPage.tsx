@@ -4,7 +4,7 @@ import { sendOTP } from '../lib/auth';
 
 interface SignUpPageProps {
   onBack: () => void;
-  onSubmit: (role: 'patient' | 'nurse', phone: string) => void;
+  onSubmit: (role: 'patient' | 'nurse', phone: string, firstName: string, lastName: string) => void;
 }
 
 export function SignUpPage({ onBack, onSubmit }: SignUpPageProps) {
@@ -28,8 +28,8 @@ export function SignUpPage({ onBack, onSubmit }: SignUpPageProps) {
       if (error) {
         setError(error.message);
       } else {
-        // Pass the phone number so we don't have to ask for it again
-        onSubmit(role, formData.phone);
+        // Pass the phone number and user details
+        onSubmit(role, formData.phone, formData.firstName, formData.lastName);
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again.');

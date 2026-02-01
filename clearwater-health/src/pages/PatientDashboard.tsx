@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Video,
   Building2,
@@ -9,12 +9,34 @@ import {
   Pill,
   Sun,
   LogOut,
-  Phone } from
-'lucide-react';
+  Phone
+} from 'lucide-react';
+
 interface PatientDashboardProps {
   onLogout: () => void;
+  onCallNurse: () => void;
 }
-export function PatientDashboard({ onLogout }: PatientDashboardProps) {
+
+export function PatientDashboard({ onLogout, onCallNurse }: PatientDashboardProps) {
+  // --- Emergency Mode Logic (Merged from main) ---
+  const [isEmergency, setIsEmergency] = useState<boolean>(() => {
+    const saved = localStorage.getItem('emergencyMode');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'emergencyMode' && e.newValue !== null) {
+        setIsEmergency(JSON.parse(e.newValue));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  console.log("Current Emergency Mode State:", isEmergency);
+
   return (
     <div className="min-h-screen w-full bg-cream-base pb-20">
       {/* Header */}
@@ -28,8 +50,8 @@ export function PatientDashboard({ onLogout }: PatientDashboardProps) {
           </div>
           <button
             onClick={onLogout}
-            className="text-sm font-medium text-warmGray-body hover:text-teal-DEFAULT transition-colors">
-
+            className="text-sm font-medium text-warmGray-body hover:text-teal-DEFAULT transition-colors"
+          >
             Sign Out
           </button>
         </div>
@@ -51,7 +73,7 @@ export function PatientDashboard({ onLogout }: PatientDashboardProps) {
           </button>
         </div>
 
-        {/* Main Appointment Widget */}
+        {/* Appointment Card */}
         <div className="bg-white rounded-[2rem] shadow-warm overflow-hidden mb-10 border border-cream-border">
           <div className="bg-teal-medium/10 p-6 flex items-center gap-3 border-b border-teal-light/20">
             <Calendar className="w-5 h-5 text-teal-dark" />
@@ -62,42 +84,50 @@ export function PatientDashboard({ onLogout }: PatientDashboardProps) {
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
               <div>
                 <h2 className="text-2xl font-bold text-warmGray-heading mb-2">
-                  Dr. Sarah Chen
+                  {isEmergency ? 'Dr. Sarah Chen' : 'Dr. Laura Smith'}
                 </h2>
-                <p className="text-warmGray-body mb-4">Cardiology Department</p>
+                <p className="text-warmGray-body mb-4">
+                  {isEmergency ? 'Cardiology Department' : 'Neurology Department'}
+                </p>
 
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center gap-3 text-warmGray-heading">
                     <div className="w-8 h-8 rounded-full bg-cream-card flex items-center justify-center">
-                      <Clock className="w-4 h-4 text-teal-DEFAULT" />
+                      <Clock className={`w-4 h-4 ${isEmergency ? 'text-coral' : 'text-teal-DEFAULT'}`} />
                     </div>
-                    <span className="font-medium">Today, 2:30 PM</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-warmGray-heading">
-                    <div className="w-8 h-8 rounded-full bg-cream-card flex items-center justify-center">
-                      <Video className="w-4 h-4 text-teal-DEFAULT" />
-                    </div>
-                    <span className="font-medium">Virtual Consultation</span>
+                    <span className={`font-medium ${isEmergency ? 'text-coral font-bold' : ''}`}>
+                      {isEmergency ? 'Arriving Now' : '2nd February 2026, 6:00 PM'}
+                    </span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-cream-base rounded-2xl p-6 md:w-64 flex flex-col items-center text-center border border-cream-border">
-                <div className="w-16 h-16 bg-teal-light/30 rounded-full flex items-center justify-center mb-4 text-teal-dark">
+              {/* Action Box */}
+              <div className={`rounded-2xl p-6 md:w-64 flex flex-col items-center text-center border transition-colors ${
+                isEmergency ? 'bg-coral/5 border-coral/20' : 'bg-cream-base border-cream-border'
+              }`}>
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors ${
+                  isEmergency ? 'bg-coral text-white animate-pulse' : 'bg-teal-light/30 text-teal-dark'
+                }`}>
                   <Video className="w-8 h-8" />
                 </div>
                 <p className="text-sm text-warmGray-body mb-4">
-                  Your care team is ready. You can join the waiting room 10
-                  minutes early.
+                  {isEmergency 
+                    ? "Your nurse has requested an immediate check-in. Please join now."
+                    : "Your care team is ready. You can join the waiting room 10 minutes early."}
                 </p>
-                <button className="w-full py-3 bg-teal-medium hover:bg-teal-dark text-white rounded-xl font-bold transition-colors shadow-lg shadow-teal-DEFAULT/20">
-                  Join Call
+                <button className={`w-full py-3 rounded-xl font-bold transition-all shadow-lg ${
+                  isEmergency 
+                    ? 'bg-coral hover:bg-red-600 text-white shadow-coral/20 scale-105' 
+                    : 'bg-teal-medium hover:bg-teal-dark text-white shadow-teal-DEFAULT/20'
+                }`}>
+                  {isEmergency ? 'Join Priority Call' : 'Join Call'}
                 </button>
               </div>
             </div>
 
             <div className="pt-6 border-t border-cream-border flex items-center justify-between text-sm text-warmGray-light">
-              <span>Appointment ID: #88392</span>
+              <span>Appointment ID: {isEmergency ? '#88392' : '#88393'}</span>
               <button className="text-teal-DEFAULT font-bold hover:underline">
                 Reschedule
               </button>
@@ -120,6 +150,14 @@ export function PatientDashboard({ onLogout }: PatientDashboardProps) {
               </div>
               <span className="text-sm font-bold bg-sage-light/30 text-sage-DEFAULT px-3 py-1 rounded-full">On Track</span>
             </div>
+            <h3 className="text-xl font-bold text-warmGray-heading mb-2">Medications</h3>
+            <p className="text-warmGray-body text-sm mb-4">
+              Next dose: Metoprolol (50mg) with dinner.
+            </p>
+            <button className="text-teal-DEFAULT font-bold text-sm flex items-center gap-1 hover:gap-2 transition-all">
+              View Schedule <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="md:col-span-2">
@@ -140,6 +178,13 @@ export function PatientDashboard({ onLogout }: PatientDashboardProps) {
                 </div>
               </div>
             </div>
+            <h3 className="text-xl font-bold text-warmGray-heading mb-2">Daily Wellness</h3>
+            <p className="text-warmGray-body text-sm mb-4">
+              Try a 5-minute breathing exercise to reduce stress before your appointment.
+            </p>
+            <button className="text-teal-DEFAULT font-bold text-sm flex items-center gap-1 hover:gap-2 transition-all">
+              Start Exercise <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
 
@@ -153,16 +198,18 @@ export function PatientDashboard({ onLogout }: PatientDashboardProps) {
           <div className="relative z-10">
             <h3 className="text-2xl font-bold mb-3">Need immediate help?</h3>
             <p className="text-teal-light mb-6 max-w-md mx-auto">
-              Our nurse line is available 24/7 for any urgent questions or
-              concerns.
+              Our nurse line is available 24/7 for any urgent questions or concerns.
             </p>
-            <button className="bg-white text-teal-dark px-6 py-3 rounded-xl font-bold hover:bg-teal-light transition-colors inline-flex items-center gap-2">
+            <button
+              onClick={onCallNurse}
+              className="bg-white text-teal-dark px-6 py-3 rounded-xl font-bold hover:bg-teal-light transition-colors inline-flex items-center gap-2"
+            >
               <Phone className="w-5 h-5" />
               Call Nurse Line
             </button>
           </div>
         </div>
       </main>
-    </div>);
-
+    </div>
+  );
 }
