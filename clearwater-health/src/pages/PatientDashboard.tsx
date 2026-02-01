@@ -9,12 +9,15 @@ import {
   Pill,
   Sun,
   LogOut,
-  Phone } from
-'lucide-react';
+  Phone
+} from
+  'lucide-react';
 interface PatientDashboardProps {
   onLogout: () => void;
+  onCallNurse: () => void;
 }
-export function PatientDashboard({ onLogout }: PatientDashboardProps) {
+
+export function PatientDashboard({ onLogout, onCallNurse }: PatientDashboardProps) {
   return (
     <div className="min-h-screen w-full bg-cream-base pb-20">
       {/* Header */}
@@ -159,7 +162,9 @@ export function PatientDashboard({ onLogout }: PatientDashboardProps) {
               Our nurse line is available 24/7 for any urgent questions or
               concerns.
             </p>
-            <button className="bg-white text-teal-dark px-6 py-3 rounded-xl font-bold hover:bg-teal-light transition-colors inline-flex items-center gap-2">
+            <button
+              onClick={onCallNurse}
+              className="bg-white text-teal-dark px-6 py-3 rounded-xl font-bold hover:bg-teal-light transition-colors inline-flex items-center gap-2">
               <Phone className="w-5 h-5" />
               Call Nurse Line
             </button>

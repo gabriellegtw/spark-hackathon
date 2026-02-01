@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import React, { useState } from 'react';
 import { RoleSelectPage } from './pages/RoleSelectPage';
 import { SignUpPage } from './pages/SignUpPage';
@@ -6,33 +5,51 @@ import { LoginPage } from './pages/LoginPage';
 import { VerifyCodePage } from './pages/VerifyCodePage';
 import { NurseDashboard } from './pages/NurseDashboard';
 import { PatientDashboard } from './pages/PatientDashboard';
-type AuthStep = 'role-select' | 'sign-up' | 'login' | 'verify' | 'dashboard';
+import { CallNursePage } from './pages/CallNursePage';
+type AuthStep = 'role-select' | 'sign-up' | 'login' | 'verify' | 'dashboard' | 'calling-nurse';
 type UserRole = 'nurse' | 'patient';
+import { signOut } from './lib/auth';
 export function App() {
   const [authStep, setAuthStep] = useState<AuthStep>('role-select');
   const [selectedRole, setSelectedRole] = useState<UserRole>('patient');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+
   // Navigation handlers
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role);
+    setFirstName('');
+    setLastName('');
+    setPhoneNumber('');
     setAuthStep('login');
   };
+
   const handleSignUpClick = () => {
+    setFirstName('');
+    setLastName('');
+    setPhoneNumber('');
     setAuthStep('sign-up');
   };
-  const handleSignUpSubmit = (role: UserRole, phone: string) => {
+
+  const handleSignUpSubmit = (role: UserRole, phone: string, first: string, last: string) => {
     setSelectedRole(role);
     setPhoneNumber(phone);
+    setFirstName(first);
+    setLastName(last);
     setAuthStep('verify');
   };
   const handleLoginSubmit = (phone: string) => {
     setPhoneNumber(phone);
+    setFirstName('');
+    setLastName('');
     setAuthStep('verify');
   };
   const handleVerifySuccess = () => {
     setAuthStep('dashboard');
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await signOut();
     setAuthStep('role-select');
     setPhoneNumber('');
   };
@@ -42,40 +59,61 @@ export function App() {
   const handleBackToLogin = () => {
     setAuthStep('login');
   };
-=======
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
->>>>>>> Stashed changes
+  const handleCallNurse = () => {
+    setAuthStep('calling-nurse');
+  }
+  const handleEndCall = () => {
+    setAuthStep('dashboard');
+  }
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="font-sans antialiased text-warmGray-body bg-cream-base min-h-screen">
+      {authStep === 'role-select' &&
+        <RoleSelectPage
+          onSelectRole={handleRoleSelect}
+          onSignUp={handleSignUpClick} />
 
-export default App
+      }
+
+      {authStep === 'sign-up' &&
+        <SignUpPage
+          onBack={handleBackToRoleSelect}
+          onSubmit={handleSignUpSubmit} />
+
+      }
+
+      {authStep === 'login' &&
+        <LoginPage
+          role={selectedRole}
+          onBack={handleBackToRoleSelect}
+          onSubmit={handleLoginSubmit} />
+
+      }
+
+      {authStep === 'verify' &&
+        <VerifyCodePage
+          role={selectedRole}
+          phone={phoneNumber}
+          firstName={firstName}
+          lastName={lastName}
+          onBack={handleBackToLogin}
+          onVerify={handleVerifySuccess} />
+
+      }
+
+      {authStep === 'calling-nurse' &&
+        <CallNursePage onEndCall={handleEndCall} />
+      }
+
+      {authStep === 'dashboard' && selectedRole === 'nurse' &&
+        <NurseDashboard onLogout={handleLogout} />
+      }
+
+      {authStep === 'dashboard' && selectedRole === 'patient' &&
+        <PatientDashboard
+          onLogout={handleLogout}
+          onCallNurse={handleCallNurse}
+        />
+      }
+    </div>);
+
+}
